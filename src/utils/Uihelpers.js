@@ -47,19 +47,26 @@ const isParkedOrNot = (date, startTime) => {
 }
 
 const convertTimestampToTime = (timestamp) => {
-    const [hours, minutes] = timestamp?.split(':');
-    let formattedHours = parseInt(hours);
-    const ampm = formattedHours >= 12 ? 'PM' : 'AM';
-    formattedHours = formattedHours % 12 || 12; // Convert to 12-hour format
-    return `${formattedHours}:${minutes} ${ampm}`;
+    if (timestamp) {
+        console.log('timestamp to convert', timestamp);
+        const [hours, minutes] = timestamp?.split(':');
+        let formattedHours = parseInt(hours);
+        const ampm = formattedHours >= 12 ? 'PM' : 'AM';
+        formattedHours = formattedHours % 12 || 12; // Convert to 12-hour format
+        return `${formattedHours}:${minutes} ${ampm}`;
+    }
+    return "invalid Time"
 };
 
 const convertTimestampToDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const day = date.getUTCDate().toString().padStart(2, '0');
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
-    const year = date.getUTCFullYear().toString();
-    return `${day}-${month}-${year}`;
+    if (timestamp) {
+        const date = new Date(timestamp);
+        const day = date.getUTCDate().toString().padStart(2, '0');
+        const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+        const year = date.getUTCFullYear().toString();
+        return `${day}-${month}-${year}`;
+    }
+    return "Invalid Date"
 }
 
 const calculateDurationWithEndTimeAndCurrentTime = (endTime, date) => {
