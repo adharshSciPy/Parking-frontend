@@ -14,7 +14,7 @@ const AdminHome = () => {
   const [isUpdateBtnDisabled, setIsUpdateBtnDisabled] = useState(false)
 
   // getting park info if already park area created
-  const { isLoading, isError, data } = useGetFloorDesignQuery()
+  const { data, refetch } = useGetFloorDesignQuery()
 
   useEffect(() => {
     if (data?.data?.length > 0) {
@@ -29,12 +29,15 @@ const AdminHome = () => {
 
   // is update worthy
   useEffect(() => {
-    if (data?.data?.length > 0) {
+    if (data?.data?.length > 0 && floor?.length > 0) {
       if (data?.data !== floor) {
         setIsUpdateBtnDisabled(true)
       }
+      else {
+        setIsUpdateBtnDisabled(false)
+      }
     }
-  }, [floor])
+  }, [data, floor])
 
   // visiblity of save cancel buttons
   useEffect(() => {
@@ -44,6 +47,8 @@ const AdminHome = () => {
       }
       else {
         setIsSaveBtnDisabled(false)
+        console.log('data', floor?.length > 0 && cacheFloor?.length === 0)
+        setIsUpdateBtnDisabled(true)
         setIsUpdateBtnDisabled(true)
       }
     }
@@ -133,6 +138,7 @@ const AdminHome = () => {
         }
         if (res) {
           toast.success('Updated Succesfull');
+          refetch()
           setIsSaveBtnDisabled(false)
           setIsUpdateBtnDisabled(false)
           setCacheFloor(floor)

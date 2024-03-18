@@ -7,7 +7,6 @@ import { useGetFloorDesignQuery } from '../../slices/api/floorApiSlice';
 import { convertTimestampToTime, isParkedOrNot, calculateDurationWithEndTimeAndCurrentTime } from '../../utils/Uihelpers';
 import dayjs from "dayjs";
 import moment from "moment";
-
 import toast from 'react-hot-toast';
 
 const BookingCard = ({ booking, refetch }) => {
@@ -106,11 +105,11 @@ const BookingCard = ({ booking, refetch }) => {
                         <div className={`px-2 inline-flex items-center rounded-md ${isParkedOrNot(booking?.date, booking?.startTime) ? 'bg-blue-50 text-blue-700 ring-blue-700/10' : 'bg-red-50 text-red-700 ring-red-700/10'} px-2 py-1 text-xs font-medium ring-1 ring-inset ring-blue-700/10`}>
                             {isParkedOrNot(booking?.date, booking?.startTime) ? 'You Parked' : 'Reserved'}
                         </div>
-                        {!isParkedOrNot(booking?.date, booking?.startTime) && (
+                        {/* {!isParkedOrNot(booking?.date, booking?.startTime) && (
                             <button className='h-5 w-5 ring-1 bg-blue-50 rounded-sm ring-blue-200 flex p-1 items-center justify-between overflow-hidden'>
                                 <i className="fa fa-pen text-xs text-blue-300 hover:text-blue-600"></i>
                             </button>
-                        )}
+                        )} */}
                     </div>
 
                     <div className='flex gap-2 items-center justify-between'>
