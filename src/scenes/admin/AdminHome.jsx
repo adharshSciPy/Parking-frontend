@@ -31,6 +31,7 @@ const AdminHome = () => {
   useEffect(() => {
     if (data?.data?.length > 0 && floor?.length > 0) {
       if (data?.data !== floor) {
+        console.log('condition triggering')
         setIsUpdateBtnDisabled(true)
       }
       else {
@@ -41,7 +42,7 @@ const AdminHome = () => {
 
   // visiblity of save cancel buttons
   useEffect(() => {
-    if (data?.data?.length === 0) {
+    if (data?.data?.length === 0 && floor?.length > 0) {
       if (floor?.length > 0 && cacheFloor?.length === 0) {
         setIsSaveBtnDisabled(true)
       }
@@ -51,7 +52,7 @@ const AdminHome = () => {
         setIsUpdateBtnDisabled(true)
       }
     }
-  }, [floor])
+  }, [data, floor])
 
   const AddFloor = (floorNumber) => {
     setFloor((prevFloors) => [
@@ -101,11 +102,14 @@ const AdminHome = () => {
 
   const cancel = () => {
     setFloor([])
+    setIsSaveBtnDisabled(false)
+    setIsUpdateBtnDisabled(false)
   }
 
   const onUpdateCancel = () => {
     setFloor(cacheFloor)
     setIsUpdateBtnDisabled(false)
+    setIsSaveBtnDisabled(false)
   }
 
   const save = async () => {
@@ -225,6 +229,15 @@ const AdminHome = () => {
           )
 
         })
+      }
+
+      {
+        floor?.length === 0 &&
+        <>
+          <div className="h-[50vh] text-center flex items-center justify-center w-full">
+            <p className="text-stone-600 text-md font-light">Create new parking slots</p>
+          </div>
+        </>
       }
 
       {

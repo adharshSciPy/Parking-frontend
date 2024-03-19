@@ -78,6 +78,8 @@ const AdminBookings = () => {
     }
   }, [isDelete])
 
+  console.log('bookings..', bookings)
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -170,30 +172,45 @@ const AdminBookings = () => {
                   )
                 })
               }
+
+
             </tbody>
           </table>
         </div>
+        {
+          bookings?.length === 0 &&
+          <>
+            <div className="h-[60vh] flex items-center justify-center">
+              <p className="text-stone-600 text-md font-light">There are no bookings to display</p>
+            </div>
+          </>
+        }
       </div>
 
+
+
       {/* next button */}
-      <div className="h-10 w-full mt-1 flex items-center justify-center">
-        <div className="h-full w-auto">
-          <div className="inline-flex rounded-md shadow-sm" role="group">
-            <button
-              disabled={!isPrev}
-              onClick={() => setPage((prev) => prev - 1)}
-              className={`px-4 min-w-[5vw] py-2 text-xs font-medium text-white cursor-pointer rounded-s-lg ${isPrev ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-500 hover:bg-gray-500 cursor-default'} border-2 border-white-100 border-s-4`}>
-              Previous
-            </button>
-            <button
-              disabled={!isNext}
-              onClick={() => setPage((prev) => prev + 1)}
-              className={`px-4 min-w-[5vw] py-2 text-xs font-medium text-white cursor-pointer  rounded-r-lg ${isNext ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-500 hover:bg-gray-500 cursor-default'} border-2 border-white-100 border-r-4`}>
-              {isLoading ? 'Loading...' : 'Next'}
-            </button>
+      {
+        bookings?.length > 0 &&
+        <div className="h-10 w-full mt-1 flex items-center justify-center">
+          <div className="h-full w-auto">
+            <div className="inline-flex rounded-md shadow-sm" role="group">
+              <button
+                disabled={!isPrev}
+                onClick={() => setPage((prev) => prev - 1)}
+                className={`px-4 min-w-[5vw] py-2 text-xs font-medium text-white cursor-pointer rounded-s-lg ${isPrev ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-500 hover:bg-gray-500 cursor-default'} border-2 border-white-100 border-s-4`}>
+                Previous
+              </button>
+              <button
+                disabled={!isNext}
+                onClick={() => setPage((prev) => prev + 1)}
+                className={`px-4 min-w-[5vw] py-2 text-xs font-medium text-white cursor-pointer  rounded-r-lg ${isNext ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-500 hover:bg-gray-500 cursor-default'} border-2 border-white-100 border-r-4`}>
+                {isLoading ? 'Loading...' : 'Next'}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      }
 
       <DeleteModal
         isDelete={isDelete}
