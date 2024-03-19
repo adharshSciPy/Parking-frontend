@@ -48,7 +48,6 @@ const isParkedOrNot = (date, startTime) => {
 
 const convertTimestampToTime = (timestamp) => {
     if (timestamp) {
-        console.log('timestamp to convert', timestamp);
         const [hours, minutes] = timestamp?.split(':');
         let formattedHours = parseInt(hours);
         const ampm = formattedHours >= 12 ? 'PM' : 'AM';

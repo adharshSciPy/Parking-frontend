@@ -63,7 +63,6 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
       const res = await booking({ floorId, slotId, userId, payloadData });
       if (res) {
         let floorData = res?.data?.data;
-        console.log('after booking response', res)
         dispatch(setUserFloor({ floorData }));
         setIsDisabled(true);
         setIsOpen(false);

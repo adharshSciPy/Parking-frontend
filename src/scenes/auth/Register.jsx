@@ -34,7 +34,6 @@ const Register = () => {
 
   useEffect(() => {
     const isEmptyFields = [fullname, email, password, confirmPassword].some((field) => field?.trim() === "")
-    console.log('status', fullname, email, password)
     if (!isEmptyFields && isValidEmail && isValidPassword && isValidConfirmpassword) {
       setIsDisabled(false)
     }

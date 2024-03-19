@@ -47,7 +47,6 @@ const AdminHome = () => {
       }
       else {
         setIsSaveBtnDisabled(false)
-        console.log('data', floor?.length > 0 && cacheFloor?.length === 0)
         setIsUpdateBtnDisabled(true)
         setIsUpdateBtnDisabled(true)
       }
@@ -120,6 +119,7 @@ const AdminHome = () => {
           toast.success('Saved Succesfull');
           setIsSaveBtnDisabled(false)
           setCacheFloor(floor)
+          refetch()
         }
       } catch (error) {
         toast.error('An error occurred while saving.');
