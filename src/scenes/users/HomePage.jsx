@@ -29,6 +29,8 @@ const HomePage = () => {
     }
   }, [data]);
 
+  console.log('FLOOR', floor)
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -39,7 +41,7 @@ const HomePage = () => {
     >
       <p className="mt-10 text-stone-600 text-md font-semibold">Parking Slots</p>
 
-      {floor.map((item, index) => {
+      {floor?.map((item, index) => {
         return (
           <Floor
             item={item}
@@ -49,6 +51,15 @@ const HomePage = () => {
           />
         );
       })}
+
+      {
+        floor?.length === 0 &&
+        <>
+          <div className="h-[60vh] text-center flex items-center justify-center w-full">
+            <p className="mt-10 text-stone-600 text-md font-light">No parking slots have been created by Administrators</p>
+          </div>
+        </>
+      }
 
       <BookingModal
         isOpen={isOpen}
