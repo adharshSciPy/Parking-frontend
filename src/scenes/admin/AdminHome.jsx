@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { motion } from "framer-motion";
 import { useCreateFloorAndSlotMutation, useGetFloorDesignQuery, useUpdateFloorAndSlotMutation } from '../../slices/api/floorApiSlice';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const AdminHome = () => {
+  const navigate = useNavigate()
 
   const [createFloorAndSlot, { isLoading: isSaveLoading }] = useCreateFloorAndSlotMutation()
   const [updateFloorAndSlot, { isLoading: isUpdateLoading }] = useUpdateFloorAndSlotMutation()
@@ -31,7 +33,6 @@ const AdminHome = () => {
   useEffect(() => {
     if (data?.data?.length > 0 && floor?.length > 0) {
       if (data?.data !== floor) {
-        console.log('condition triggering')
         setIsUpdateBtnDisabled(true)
       }
       else {
@@ -166,15 +167,21 @@ const AdminHome = () => {
 
       {/* admin header section */}
       <div className="flex items-center justify-between gap-2 mb-10">
-        <div className="h-20 w-[30%] bg-blue-200 rounded-xl p-3 cursor-pointer hover:bg-blue-100 flex items-center justify-between gap-2 overflow-hidden">
+        <div
+          onClick={() => navigate('/admin/users')}
+          className="h-20 w-[30%] bg-blue-200 rounded-xl p-3 cursor-pointer hover:bg-blue-100 flex items-center justify-between gap-2 overflow-hidden">
           <p className='text-sm font-semibold text-zinc-500'>USERS</p>
           <i className="fa-solid fa-users text-zinc-400 text-8xl"></i>
         </div>
-        <div className="h-20 w-[30%] bg-blue-200 rounded-xl p-3 cursor-pointer hover:bg-blue-100 flex items-center justify-between gap-2 overflow-hidden">
+        <div
+          onClick={() => navigate('/admin/bookings')}
+          className="h-20 w-[30%] bg-blue-200 rounded-xl p-3 cursor-pointer hover:bg-blue-100 flex items-center justify-between gap-2 overflow-hidden">
           <p className='text-sm font-semibold text-zinc-500'>BOOKINGS</p>
           <i className="fa-solid fa-book text-zinc-400 text-8xl"></i>
         </div>
-        <div className="h-20 w-[30%] bg-blue-200 rounded-xl p-3 cursor-pointer hover:bg-blue-100 flex items-center justify-between gap-2 overflow-hidden">
+        <div  
+          onClick={() => navigate('/admin/home')}
+          className="h-20 w-[30%] bg-blue-200 rounded-xl p-3 cursor-pointer hover:bg-blue-100 flex items-center justify-between gap-2 overflow-hidden">
           <p className='text-sm font-semibold text-zinc-500'>FREE SLOTS</p>
           <i className="fa-solid fa-car text-zinc-400 text-8xl"></i>
         </div>
