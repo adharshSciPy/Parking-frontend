@@ -67,7 +67,7 @@ const Navbar = () => {
       {/* logo */}
       <div onClick={() => navigate('/')} className='flex w-1/4'>
         <Link className='rounded-md p-1 text-sm font-semibold flex items-center justify-center md:text-lg text-zinc-500 hover:text-blue-500'>
-          Car Parking
+          Parking
         </Link>
       </div>
 
@@ -98,27 +98,31 @@ const Navbar = () => {
 
 
       {/* md handburger and menu list */}
-      <div className='md:hidden'>
-        <button className='w-10 h-7 flex flex-col justify-between z-50 relative' onClick={() => setIsOpen((prev) => !prev)}>
-          <div className={`w-6 h-1 ${isOpen ? 'bg-white' : 'bg-black'} rounded`}></div>
-          <div className={`w-8 h-1 ${isOpen ? 'bg-white' : 'bg-black'} rounded`}></div>
-          <div className={`w-7 h-1 ${isOpen ? 'bg-white' : 'bg-black'} rounded`}></div>
-        </button>
+      {
+        isLoggedIn &&
+        <div className='md:hidden'>
+          <button className='w-7 md:w-8 h-7 flex flex-col justify-between z-50 relative' onClick={() => setIsOpen((prev) => !prev)}>
+            <div className={`w-6 h-1 ${isOpen ? 'bg-white' : 'bg-black'} rounded`}></div>
+            <div className={`w-8 h-1 ${isOpen ? 'bg-white' : 'bg-black'} rounded`}></div>
+            <div className={`w-7 h-1 ${isOpen ? 'bg-white' : 'bg-black'} rounded`}></div>
+          </button>
 
-        {/* mobile menu list */}
-        {
-          isOpen &&
-          <div className='absolute top-0 left-0 w-screen h-screen bg-black text-white flex flex-col items-center justify-center gap-8 text-2xl'>
-            {
-              links.map((item, index) => {
-                return (
-                  <Link href={item.url} key={index}><p className='hover:text-opacity-50'>{item.title}</p></Link>
-                )
-              })
-            }
-          </div>
-        }
-      </div>
+          {/* mobile menu list */}
+          {
+            isOpen &&
+            <div className='absolute top-0 left-0 w-screen h-screen bg-black text-white flex flex-col items-center justify-center gap-8 text-2xl'>
+              {
+                links.map((item, index) => {
+                  return (
+                    <Link href={item.url} key={index}><p className='hover:text-opacity-50'>{item.title}</p></Link>
+                  )
+                })
+              }
+            </div>
+          }
+        </div>
+      }
+
 
     </div>
   )
