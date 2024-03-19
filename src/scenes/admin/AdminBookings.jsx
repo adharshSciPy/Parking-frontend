@@ -59,8 +59,6 @@ const AdminBookings = () => {
   //handling delete
   const handleDeletePayload = (booking) => {
     if (booking) {
-      console.log(booking?.slotId)
-      console.log(booking?.floorId)
       setFloorId(booking?.floorId)
       setSlotId(booking?.slotId)
       document.body.style.overflow = "hidden";

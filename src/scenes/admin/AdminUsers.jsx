@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from "framer-motion";
-import { GroupButton } from '../../components';
 import { useGetAllUsersQuery } from '../../slices/api/userApiSlice';
 import { formatTimestamp } from '../../utils/Uihelpers';
+import { useDeleteUserByIdMutation } from '../../slices/api/userApiSlice';
+import { DeleteModal } from '../../components';
+import toast from 'react-hot-toast';
 
 const AdminUsers = () => {
 
   const [page, setPage] = useState(1)
   const { data, isLoading, isSuccess, isError, refetch } = useGetAllUsersQuery(page);
-
+  const [deleteUserById, { isSuccess: isDeleteSuccess, isLoading: isDeleteLoading, isError: isDeleteFailed }] = useDeleteUserByIdMutation()
 
   const [userList, setUserList] = useState([])
   const [isNext, setIsNext] = useState(false)
   const [isPrev, setIsPrev] = useState(false)
+  const [isDelete, setIsDelete] = useState(false)
+  const [userId, setUserId] = useState(null)
 
   useEffect(() => {
     if (data) {
@@ -34,6 +38,39 @@ const AdminUsers = () => {
       setIsPrev(true)
     }
   }), [page]
+
+  //delete state management
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      if(data?.data?.length === 1) {
+        setUserList([])
+        setIsDelete(false);
+        setUserId(null)
+      }
+      refetch();
+      setIsDelete(false);
+      setUserId(null)
+
+      toast.success('User Deleted Cancelled');
+    } else if (isDeleteFailed) {
+      setIsDelete(false);
+      toast.error('Failed to delete user!');
+    }
+  }, [isDeleteSuccess, isDeleteFailed]);
+
+  const handleDeleteUserModal = (id) => {
+    if (id) {
+      setUserId(id)
+      setIsDelete(true)
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  const handleDelete = async () => {
+    if (userId) {
+      await deleteUserById({ userId })
+    }
+  }
 
   return (
     <motion.section
@@ -87,7 +124,12 @@ const AdminUsers = () => {
                           {formatTimestamp(user?.createdAt)}
                         </td>
                         <td className="px-6 py-4 m-1">
-                          <GroupButton />
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteUserModal(user?._id)}
+                            className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                            <i className="fa-solid fa-trash" aria-hidden="true"></i>
+                          </button>
                         </td>
                       </tr>
                     </>
@@ -118,6 +160,15 @@ const AdminUsers = () => {
           </div>
         </div>
       </div>
+
+      <DeleteModal
+        isDelete={isDelete}
+        setIsDelete={setIsDelete}
+        handleDelete={handleDelete}
+        isLoading={isDeleteLoading}
+        isError={isDeleteFailed}
+        message={'This action cannot be reversable'}
+      />
     </motion.section>
   )
 }
