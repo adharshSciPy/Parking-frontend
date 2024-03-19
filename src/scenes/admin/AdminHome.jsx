@@ -49,8 +49,6 @@ const AdminHome = () => {
       }
       else {
         setIsSaveBtnDisabled(false)
-        setIsUpdateBtnDisabled(true)
-        setIsUpdateBtnDisabled(true)
       }
     }
   }, [data, floor])
