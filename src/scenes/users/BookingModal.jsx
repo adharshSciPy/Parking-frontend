@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { DatePicker, TimePicker } from "antd";
+import { DatePicker, TimePicker, ConfigProvider } from "antd";
 import { motion } from "framer-motion";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { useBookSlotMutation } from "../../slices/api/bookingSlice";
 import { setUserFloor } from "../../slices/state/userFloorslice";
+
 
 const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
 
@@ -114,7 +115,7 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
               </div>
 
               <button
-                onClick={()=>handleClose()}
+                onClick={() => handleClose()}
                 type="button"
                 className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
               >
@@ -162,19 +163,19 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
                 >
                   Select Time Range
                 </label>
-                <TimePicker.RangePicker
-                  className="text-sm"
-                  use12Hours
-                  format="h:mm a"
-                  onChange={handleTimeRange}
-                />
+                  <TimePicker.RangePicker
+                    className="text-sm  "
+                    use12Hours
+                    format="h:mm a"
+                    onChange={handleTimeRange}
+                  />
               </div>
             </div>
 
             <div className="flex items-center gap-3 justify-end w-full p-4 md:p-5 border-t border-gray-200 rounded-b">
               <button
                 type="button"
-                onClick={()=>handleClose()}
+                onClick={() => handleClose()}
                 className="text-gray-800 bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-sm rounded-md px-4 py-2 flex items-center justify-center"
               >
                 Decline
@@ -185,8 +186,8 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
                 disabled={isDisabled}
                 onClick={() => handleBooking()}
                 className={`text-white ${isDisabled
-                    ? "bg-zinc-300"
-                    : "bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
+                  ? "bg-zinc-300"
+                  : "bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
                   } text-white text-sm rounded-md px-4 py-2 flex items-center justify-center`}
               >
                 Book
