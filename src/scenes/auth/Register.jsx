@@ -6,6 +6,7 @@ import { useRegisterMutation } from '../../slices/api/userApiSlice';
 import toast from 'react-hot-toast';
 import { RegEx } from '../../constants/RegEx';
 import { debounce } from 'lodash';
+import { Tooltip } from 'antd';
 
 
 const Register = () => {
@@ -22,6 +23,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const [isValidEmail, setIsValidEmail] = useState(true)
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const [isValidPassword, setIsValidPassword] = useState(true)
   const [isValidConfirmpassword, setIsValidConfirmpassword] = useState(true)
   const [isDisabled, setIsDisabled] = useState(true)
@@ -92,7 +94,7 @@ const Register = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       className='h-screen w-full flex items-center justify-center bg-gradient-to-b from-white to-blue-200'>
-      <div className='h-[60%] w-[80%] md:w-[60%] bg-white flex items-center justify-center'>
+      <div className='h-[60%] min-h-[60%] w-[80%] md:w-[60%] bg-white flex items-center justify-center'>
         <div className='hidden md:flex bg-blue-200 h-full flex-1  items-center justify-center overflow-hidden'>
           <img src={registerImage} alt="" className='h-full object-cover' />
         </div>
@@ -128,15 +130,31 @@ const Register = () => {
             {
               !isValidEmail && <p className='text-xs text-red-600 mb-2'>Please enter valid email address</p>
             }
-            <div className={!isValidPassword ? `mb-1` : `mb-5`}>
-              <input
-                ref={passwordRef}
-                type="password"
-                placeholder='password'
-                autoComplete="off"
-                value={password}
-                onChange={(e) => handleOnChange(e.target.value, RegEx.password, setPassword, setIsValidPassword, confirmPasswordRef)}
-                className='bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:ring-blue-900 active:ring-blue-900 focus:border-blue-500 block w-full p-2.5 outline-none' />
+            <div className={!isValidConfirmpassword ? `mb-1` : `mb-5`}>
+              <div className='relative'>
+
+                <Tooltip placement="right" title="Password must contain at least 8 characters, including uppercase, lowercase, and special characters">
+                  <input
+                    ref={passwordRef}
+                    type={`${isPasswordVisible ? "text" : "password"}`}
+                    placeholder='Password'
+                    autoComplete="off"
+                    value={password}
+                    onChange={(e) => handleOnChange(e.target.value, RegEx.passwordRegex, setPassword, setIsValidPassword, confirmPasswordRef)}
+                    className='bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:ring-blue-900 active:ring-blue-900 focus:border-blue-500 block w-full p-2.5 outline-none' />
+                </Tooltip>
+                <div
+                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                  onClick={() => setIsPasswordVisible((prev) => !prev)}
+                >
+                  <i
+                    className={`${isPasswordVisible
+                      ? "fa-regular fa-eye"
+                      : "fa-regular fa-eye-slash"
+                      }`}
+                  ></i>
+                </div>
+              </div>
             </div>
             {
               !isValidPassword && <p className='text-xs text-red-600 mb-2'>please enter a valid password</p>

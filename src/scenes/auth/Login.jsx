@@ -8,6 +8,7 @@ import { RegEx } from "../../constants/RegEx";
 import { debounce } from "lodash";
 import toast from "react-hot-toast";
 import loginImg from "../../assests/login.png";
+import { Tooltip } from 'antd';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ const Login = () => {
       transition={{ duration: 0.5 }}
       className="h-screen w-full flex items-center justify-center bg-gradient-to-b from-white to-blue-200"
     >
-      <div className="h-[60%] w-[80%] md:w-[60%] bg-white flex items-center justify-center">
+      <div className="h-[60%] min-h-[60%] w-[80%] md:w-[60%] bg-white flex items-center justify-center">
         <div className="hidden md:flex *:bg-blue-300 h-full flex-1  items-center justify-center overflow-hidden">
           <img src={loginImg} alt="" className="h-full object-cover" />
         </div>
@@ -116,33 +117,34 @@ const Login = () => {
             </div>
             <div className={!isValidEmail ? `mb-1` : `mb-5`}>
               <div className="relative">
-                <input
-                  type={`${isPasswordVisible ? "text" : "password"}`}
-                  autoComplete="off"
-                  placeholder="password"
-                  ref={passwordRef}
-                  value={password}
-                  onChange={(e) =>
-                    handleOnChange(
-                      e.target.value,
-                      RegEx.passwordRegex,
-                      setPassword,
-                      setIsValidPassword,
-                      null
-                    )
-                  }
-                  className="bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:ring-blue-800 focus:border-blue-500 block w-full p-2.5 outline-none"
-                />
+                <Tooltip placement="right" title="Password must contain at least 8 characters, including uppercase, lowercase, and special characters">
+                  <input
+                    type={`${isPasswordVisible ? "text" : "password"}`}
+                    autoComplete="off"
+                    placeholder="password"
+                    ref={passwordRef}
+                    value={password}
+                    onChange={(e) =>
+                      handleOnChange(
+                        e.target.value,
+                        RegEx.passwordRegex,
+                        setPassword,
+                        setIsValidPassword,
+                        null
+                      )
+                    }
+                    className="bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:ring-blue-800 focus:border-blue-500 block w-full p-2.5 outline-none"
+                  />
+                </Tooltip>
                 <div
                   className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
                   onClick={() => toggleIsPassword()}
                 >
                   <i
-                    className={`${
-                      isPasswordVisible
+                    className={`${isPasswordVisible
                         ? "fa-regular fa-eye"
                         : "fa-regular fa-eye-slash"
-                    }`}
+                      }`}
                   ></i>
                 </div>
               </div>
@@ -162,11 +164,10 @@ const Login = () => {
             <button
               type="submit"
               disabled={isDisabled}
-              className={`mt-4 p-2 ${
-                isDisabled
+              className={`mt-4 p-2 ${isDisabled
                   ? "bg-blue-200 hover:bg-blue-200 active:bg-blue-200"
                   : "bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
-              }   rounded-md text-white text-sm w-full`}
+                }   rounded-md text-white text-sm w-full`}
             >
               Login
             </button>
