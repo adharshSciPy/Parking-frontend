@@ -66,10 +66,16 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
         dispatch(setUserFloor({ floorData }));
         setIsDisabled(true);
         setIsOpen(false);
+        document.body.style.overflow = "";
         refetch()
       }
     }
   };
+
+  const handleClose = () => {
+    document.body.style.overflow = "";
+    setIsOpen(false)
+  }
 
   if (!isOpen) {
     return null;
@@ -108,7 +114,7 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
               </div>
 
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={()=>handleClose()}
                 type="button"
                 className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
               >
@@ -168,7 +174,7 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
             <div className="flex items-center gap-3 justify-end w-full p-4 md:p-5 border-t border-gray-200 rounded-b">
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={()=>handleClose()}
                 className="text-gray-800 bg-gray-200 hover:bg-gray-300 active:bg-gray-400 text-sm rounded-md px-4 py-2 flex items-center justify-center"
               >
                 Decline
