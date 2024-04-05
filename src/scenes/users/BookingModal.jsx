@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { DatePicker, TimePicker, ConfigProvider } from "antd";
+import { DatePicker, TimePicker } from "antd";
 import { motion } from "framer-motion";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { useBookSlotMutation } from "../../slices/api/bookingSlice";
 import { setUserFloor } from "../../slices/state/userFloorslice";
+import toast from 'react-hot-toast';
 
 
 const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
@@ -20,6 +21,8 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
+  const [time, setTime] = useState([])
+  const [isWorthyToEnableFromTime, setIsWorthyToEnableFromTime] = useState(false);
 
   const handleDate = (changedDate) => {
     setDate(changedDate?.$d);
@@ -34,7 +37,7 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
 
   // validate submit button
   useEffect(() => {
-    if (date && endTime && startTime) {
+    if (date && isWorthyToEnableFromTime) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -77,6 +80,54 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
     document.body.style.overflow = "";
     setIsOpen(false)
   }
+
+  const handleOK = (time) => {
+    if (time?.[0] === null && time?.[1]) {
+      setTime([])
+      toast.error('Please provide a start time')
+    } else if (time?.[0]) {
+      const currentTime = new Date();
+      const givenDate = new Date(date);
+      const givenTime = time?.[0]?.$d;
+
+      // Combine given date and given time
+      const combinedDateTime = new Date(givenDate);
+      combinedDateTime.setHours(givenTime.getHours(), givenTime.getMinutes(), givenTime.getSeconds());
+
+      if (combinedDateTime < currentTime) {
+        setTime([])
+        toast.error('The given time is less than the current time.')
+      }
+
+      const secondTime = time?.[1]?.$d
+      if (secondTime) {
+
+        const combinedSecondTimeWithDate = new Date(givenDate);
+        combinedSecondTimeWithDate.setHours(secondTime?.getHours(), secondTime?.getMinutes(), secondTime?.getSeconds());
+
+        if (combinedSecondTimeWithDate) {
+
+          const timeDifference = combinedSecondTimeWithDate?.getTime() - combinedDateTime?.getTime();
+          const hoursDifference = timeDifference / (1000 * 60 * 60);
+          if (hoursDifference < 0) {
+            toast.error('End time should be higher than Start time')
+            setTime([])
+          }
+          if (hoursDifference > 3) {
+            toast.error('End time should be within 3 hours')
+            setTime([])
+          }
+          else {
+            setTime(time)
+            setIsWorthyToEnableFromTime(true)
+          }
+        }
+      }
+    }
+  }
+
+
+
 
   if (!isOpen) {
     return null;
@@ -163,12 +214,16 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
                 >
                   Select Time Range
                 </label>
-                  <TimePicker.RangePicker
-                    className="text-sm  "
-                    use12Hours
-                    format="h:mm a"
-                    onChange={handleTimeRange}
-                  />
+                <TimePicker.RangePicker
+                  className="text-sm"
+                  use12Hours
+                  format="h:mm a"
+                  onChange={handleTimeRange}
+                  value={time}
+                  onOk={(e) => handleOK(e)}
+                />
+
+
               </div>
             </div>
 
