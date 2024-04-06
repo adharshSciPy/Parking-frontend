@@ -29,8 +29,6 @@ const HomePage = () => {
     }
   }, [data]);
 
-  console.log('FLOOR', floor)
-
   return (
     <motion.section
       initial={{ opacity: 0 }}
