@@ -72,6 +72,10 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
         setIsOpen(false);
         document.body.style.overflow = "";
         refetch()
+        setTime([])
+      }
+      else {
+        setTime([])
       }
     }
   };
@@ -125,9 +129,6 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
       }
     }
   }
-
-
-
 
   if (!isOpen) {
     return null;
