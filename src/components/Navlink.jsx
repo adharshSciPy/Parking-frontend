@@ -6,7 +6,7 @@ const Navlink = ({ link }) => {
     const location = useLocation();
 
     return (
-        <Link to={link.url} className={`rounded-full p-1 text-sm hover:text-opacity-50 ${location.pathname === link.url ? 'bg-blue-400 text-md px-3 text-white hover:text-opacity-80' : 'hover:text-gray-900'}`}>
+        <Link to={link.url} className={`rounded-full p-1 text-sm hover:text-opacity-50 ${location.pathname === link.url ? 'bg-blue-600 text-md px-3 text-white hover:text-white hover:text-opacity-100' : 'hover:text-gray-900'}`}>
             {link.title}
         </Link>
     );
