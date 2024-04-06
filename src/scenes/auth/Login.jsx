@@ -40,14 +40,7 @@ const Login = () => {
     }
   }, [email, password, isValidEmail, isValidPassword]);
 
-  // onChange handler
-  // const handleOnChange = (value, setState, isIntracted, setIsValid, regEx) => {
-  //   setState(value)
-  //   if (isIntracted) {
-  //     setIsValid(regEx?.test(value))
-  //   }
-  // }
-
+  //onChange handler
   const handleOnChange = (value, setState, isIntracted, setIsValid, regEx) => {
     setState(value)
     if (isIntracted) {
@@ -55,19 +48,12 @@ const Login = () => {
     }
   }
   
-
-  // focus handler
-  // const handleBlur = (state, setIntracted, setIsValid, regEx) => {
-  //   setIntracted(true);
-  //   setIsValid(regEx.test(state));
-  // }
-
+  //focus handler
   const handleBlur = (state, setInteracted, setValidity, regEx) => {
       setInteracted(true);
       setValidity(regEx.test(state));
   };
   
-
   const toggleIsPassword = () => {
     setIsPasswordVisible((prev) => !prev);
   };
