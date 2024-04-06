@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { useLoginMutation } from "../../slices/api/userApiSlice";
 import { setCredentials } from "../../slices/state/authSlices";
 import { RegEx } from "../../constants/RegEx";
-import { debounce } from "lodash";
 import toast from "react-hot-toast";
 import loginImg from "../../assests/login.png";
 import { Tooltip } from 'antd';
@@ -25,6 +24,9 @@ const Login = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
 
+  const [emailInteracted, setEmailInteracted] = useState(false);
+  const [passwordInteracted, setPasswordInteracted] = useState(false);
+
   const [login, { isLoading, isError, data, isSuccess }] = useLoginMutation();
 
   useEffect(() => {
@@ -38,21 +40,39 @@ const Login = () => {
     }
   }, [email, password, isValidEmail, isValidPassword]);
 
-  const handleOnChange = (value, regEx, setValue, setValid, nextRef = null) => {
-    setValue(value);
-    setValid(regEx.test(value));
-    const debouncedFunction = debounce(() => {
-      if (regEx.test(value)) {
-        nextRef?.current?.focus();
-      }
-    }, 4000);
-    debouncedFunction();
+  // onChange handler
+  // const handleOnChange = (value, setState, isIntracted, setIsValid, regEx) => {
+  //   setState(value)
+  //   if (isIntracted) {
+  //     setIsValid(regEx?.test(value))
+  //   }
+  // }
+
+  const handleOnChange = (value, setState, isIntracted, setIsValid, regEx) => {
+    setState(value)
+    if (isIntracted) {
+      setIsValid(regEx.test(value))
+    }
+  }
+  
+
+  // focus handler
+  // const handleBlur = (state, setIntracted, setIsValid, regEx) => {
+  //   setIntracted(true);
+  //   setIsValid(regEx.test(state));
+  // }
+
+  const handleBlur = (state, setInteracted, setValidity, regEx) => {
+      setInteracted(true);
+      setValidity(regEx.test(state));
   };
+  
 
   const toggleIsPassword = () => {
     setIsPasswordVisible((prev) => !prev);
   };
 
+  //submit handler
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -66,6 +86,8 @@ const Login = () => {
       setEmail("");
       setPassword("");
       setIsDisabled(true);
+      setEmailInteracted(false);
+      setPasswordInteracted(false);
       let errMessage = err?.data?.message
         ? err?.data?.message
         : "Login Failed!";
@@ -91,31 +113,24 @@ const Login = () => {
           <p className="text-4xl font-bold text-blue-400 mt-5">Login</p>
 
           <form className="w-[60%]" onSubmit={submitHandler}>
-            <div className={!isValidEmail ? `mb-1` : `mb-5`}>
+            <div className={!isValidEmail && emailInteracted ? `mb-1` : `mb-5`}>
               <input
                 type="email"
                 placeholder="email or phone"
                 autoComplete="off"
                 ref={emailRef}
                 value={email}
-                onChange={(e) =>
-                  handleOnChange(
-                    e.target.value,
-                    RegEx.email,
-                    setEmail,
-                    setIsValidEmail,
-                    passwordRef
-                  )
-                }
+                onChange={(e) => handleOnChange(e.target.value, setEmail, emailInteracted, setIsValidEmail, RegEx.email)}
+                onBlur={() => handleBlur(email, setEmailInteracted, setIsValidEmail, RegEx.email)}
                 className="bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:border-blue-800 active:ring-blue-500 block w-full p-2.5 outline-none"
               />
-              {!isValidEmail && (
-                <p className="text-xs text-red-600">
-                  Please enter valid email address
+              {!isValidEmail && emailInteracted && (
+                <p className="text-xs text-red-600 mt-1">
+                  Please enter a valid email address
                 </p>
               )}
             </div>
-            <div className={!isValidEmail ? `mb-1` : `mb-5`}>
+            <div className={!isValidPassword && passwordInteracted ? `mb-1` : `mb-5`}>
               <div className="relative">
                 <Tooltip placement="right" title="Password must contain at least 8 characters, including uppercase, lowercase, and special characters">
                   <input
@@ -124,21 +139,19 @@ const Login = () => {
                     placeholder="password"
                     ref={passwordRef}
                     value={password}
-                    onChange={(e) =>
-                      handleOnChange(
-                        e.target.value,
-                        RegEx.passwordRegex,
-                        setPassword,
-                        setIsValidPassword,
-                        null
-                      )
-                    }
+                    onChange={(e) => handleOnChange(e.target.value, setPassword, passwordInteracted, setIsValidPassword, RegEx.passwordRegex)}
+                    onBlur={() => handleBlur(password, setPasswordInteracted, setIsValidPassword, RegEx.passwordRegex)}
                     className="bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:ring-blue-800 focus:border-blue-500 block w-full p-2.5 outline-none"
                   />
                 </Tooltip>
+                {!isValidPassword && passwordInteracted && (
+                  <p className="text-xs text-red-600 mt-1">
+                    Please enter a valid password
+                  </p>
+                )}
                 <div
                   className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
-                  onClick={() => toggleIsPassword()}
+                  onClick={toggleIsPassword}
                 >
                   <i
                     className={`${isPasswordVisible
@@ -150,11 +163,6 @@ const Login = () => {
               </div>
             </div>
 
-            {!isValidPassword && (
-              <p className="text-xs text-red-600 mt-1">
-                Please enter valid password
-              </p>
-            )}
             <p className={`text-xs mt-2`}>
               create a new account
               <span className="ml-1 text-blue-500">
