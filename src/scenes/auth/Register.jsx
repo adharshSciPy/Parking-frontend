@@ -5,7 +5,6 @@ import registerImage from '../../assests/register.png'
 import { useRegisterMutation } from '../../slices/api/userApiSlice';
 import toast from 'react-hot-toast';
 import { RegEx } from '../../constants/RegEx';
-import { debounce } from 'lodash';
 import { Tooltip } from 'antd';
 
 
@@ -22,7 +21,12 @@ const Register = () => {
   const [password, setPassword] = useState(null)
   const [confirmPassword, setConfirmPassword] = useState('')
 
+  const [isEmailIntracted, setIsEmailIntracted] = useState(false)
+  const [isPasswordIntracted, setIsPasswordIntracted] = useState(false)
+  const [isFullNameIntracted, setIsFullNameIntracted] = useState(false)
+
   const [isValidEmail, setIsValidEmail] = useState(true)
+  const [isValidFullName, setIsValidFullName] = useState(true)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const [isValidPassword, setIsValidPassword] = useState(true)
   const [isValidConfirmpassword, setIsValidConfirmpassword] = useState(true)
@@ -36,7 +40,7 @@ const Register = () => {
 
   useEffect(() => {
     const isEmptyFields = [fullname, email, password, confirmPassword].some((field) => field?.trim() === "")
-    if (!isEmptyFields && isValidEmail && isValidPassword && isValidConfirmpassword) {
+    if (!isEmptyFields && isValidEmail && isValidFullName && isValidPassword && isValidConfirmpassword) {
       setIsDisabled(false)
     }
     else {
@@ -44,16 +48,21 @@ const Register = () => {
     }
   }, [fullname, email, password, confirmPassword, isValidEmail, isValidPassword, isValidConfirmpassword])
 
-  const handleOnChange = (value, regEx, setValue, setValid, nextRef) => {
-    setValue(value);
-    setValid(regEx.test(value))
-    const debouncedFunction = debounce(() => {
-      if (regEx.test(value)) {
-        nextRef?.current?.focus();
-      }
-    }, 4000);
-    debouncedFunction();
+
+  //onChange handler
+  const handleOnChange = (value, setState, isIntracted, setIsValid, regEx) => {
+    setState(value)
+    if (isIntracted) {
+      setIsValid(regEx.test(value))
+    }
   }
+
+  //focus handler
+  const handleBlur = (state, setInteracted, setValidity, regEx) => {
+    setInteracted(true);
+    setValidity(regEx.test(state));
+  };
+
 
   const handleClickConfirmPassword = () => {
     if (password === null || password === "" || !isValidPassword) {
@@ -108,16 +117,21 @@ const Register = () => {
           </div>
 
           <form className='w-[60%]' onSubmit={submitHandler}>
-            <div className='mb-5'>
+            <div className={!isValidFullName ? `mb-1` : `mb-5`}>
               <input
                 ref={fullnameRef}
                 type="text"
                 placeholder='full name'
                 autoComplete="off"
                 value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
+                onChange={(e) => handleOnChange(e.target.value, setFullname, isFullNameIntracted, setIsValidFullName, RegEx.notEmpty)}
+                onBlur={() => handleBlur(fullname, setIsFullNameIntracted, setIsValidFullName, RegEx.notEmpty)}
                 className='bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:ring-blue-900 active:ring-blue-900 focus:border-blue-500 block w-full p-2.5 outline-none' />
             </div>
+            {
+              !isValidFullName && <p className='text-xs text-red-600 mb-2'>Please enter valid Fullname</p>
+            }
+
             <div className={!isValidEmail ? `mb-1` : `mb-5`}>
               <input
                 ref={emailRef}
@@ -125,7 +139,8 @@ const Register = () => {
                 placeholder='email or phone'
                 autoComplete="off"
                 value={email}
-                onChange={(e) => handleOnChange(e.target.value, RegEx.email, setEmail, setIsValidEmail, passwordRef)}
+                onChange={(e) => handleOnChange(e.target.value, setEmail, isEmailIntracted, setIsValidEmail, RegEx.email)}
+                onBlur={() => handleBlur(email, setIsEmailIntracted, setIsValidEmail, RegEx.email)}
                 className='bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:ring-blue-900 focus:border-blue-900 block w-full p-2.5 outline-none' />
             </div>
             {
@@ -140,7 +155,8 @@ const Register = () => {
                     placeholder='Password'
                     autoComplete="off"
                     value={password}
-                    onChange={(e) => handleOnChange(e.target.value, RegEx.passwordRegex, setPassword, setIsValidPassword, confirmPasswordRef)}
+                    onChange={(e) => handleOnChange(e.target.value, setPassword, isPasswordIntracted, setIsValidPassword, RegEx.passwordRegex)}
+                    onBlur={() => handleBlur(password, setIsPasswordIntracted, setIsValidPassword, RegEx.passwordRegex)}
                     className='bg-blue-50 border border-blue-300 text-blue-900 text-sm rounded-lg focus:ring-blue-900 active:ring-blue-900 focus:border-blue-500 block w-full p-2.5 outline-none' />
                 </Tooltip>
                 <div
