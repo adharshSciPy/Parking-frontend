@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useCreateFloorAndSlotMutation, useGetFloorDesignQuery, useUpdateFloorAndSlotMutation } from '../../slices/api/floorApiSlice';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { Tooltip } from 'antd';
 
 const AdminHome = () => {
   const navigate = useNavigate()
@@ -11,6 +12,9 @@ const AdminHome = () => {
   const [updateFloorAndSlot, { isLoading: isUpdateLoading }] = useUpdateFloorAndSlotMutation()
 
   const [floor, setFloor] = useState([])
+  const [price, setPrice] = useState('')
+  const [initialPrice, setInitialPrice] = useState('')
+  const [isPriceReady, setIsPriceReady] = useState(false)
   const [cacheFloor, setCacheFloor] = useState([])
   const [isSaveBtnDisabled, setIsSaveBtnDisabled] = useState(false)
   const [isUpdateBtnDisabled, setIsUpdateBtnDisabled] = useState(false)
@@ -21,6 +25,9 @@ const AdminHome = () => {
   useEffect(() => {
     if (data?.data?.length > 0) {
       setFloor(data?.data)
+      console.log('data', data)
+      setPrice(data?.data?.[0]?.price)
+      setInitialPrice(data?.data?.[0]?.price)
       setCacheFloor(data?.data)
       setIsSaveBtnDisabled(false)
     }
@@ -29,17 +36,29 @@ const AdminHome = () => {
     }
   }, [data])
 
+  //validate price ready 
+  useEffect(() => {
+    if (price) {
+      setIsPriceReady(true)
+    }
+    else {
+      setIsPriceReady(false)
+    }
+  }, [price])
+
   // is update worthy
   useEffect(() => {
     if (data?.data?.length > 0 && floor?.length > 0) {
-      if (data?.data !== floor) {
+      console.log('lamm')
+      console.log('sldfkj', price, initialPrice)
+      if (data?.data !== floor || price !== initialPrice) {
         setIsUpdateBtnDisabled(true)
       }
       else {
         setIsUpdateBtnDisabled(false)
       }
     }
-  }, [data, floor])
+  }, [data, floor, price])
 
   // visiblity of save cancel buttons
   useEffect(() => {
@@ -99,6 +118,15 @@ const AdminHome = () => {
     });
   };
 
+  const onChangePrice = (e) => {
+    const value = e.target.value.trim();
+    if (value === '' || !isNaN(parseFloat(value))) {
+        setPrice(value === '' ? '' : parseFloat(value));
+    } else {
+        toast.error('Please provide a valid number');
+    }
+}
+
   const cancel = () => {
     setFloor([])
     setIsSaveBtnDisabled(false)
@@ -114,7 +142,7 @@ const AdminHome = () => {
   const save = async () => {
     if (floor.length > 0) {
       try {
-        const res = await createFloorAndSlot({ floorArray: floor }).unwrap()
+        const res = await createFloorAndSlot({ floorArray: floor, price }).unwrap()
         if (res.error) {
           toast.error('An error occurred while saving.');
         }
@@ -135,7 +163,7 @@ const AdminHome = () => {
   const update = async () => {
     if (floor.length > 0) {
       try {
-        const res = await updateFloorAndSlot({ floorArray: floor }).unwrap()
+        const res = await updateFloorAndSlot({ floorArray: floor, price }).unwrap()
         if (res.error) {
           toast.error('An error occurred while updating.');
         }
@@ -177,7 +205,7 @@ const AdminHome = () => {
           <p className='text-sm font-semibold text-zinc-500'>BOOKINGS</p>
           <i className="fa-solid fa-book text-zinc-400 text-8xl"></i>
         </div>
-        <div  
+        <div
           onClick={() => navigate('/admin/home')}
           className="h-20 w-[30%] bg-blue-200 rounded-xl p-3 cursor-pointer hover:bg-blue-100 flex items-center justify-between gap-2 overflow-hidden">
           <p className='text-sm font-semibold text-zinc-500'>FREE SLOTS</p>
@@ -186,11 +214,23 @@ const AdminHome = () => {
       </div>
 
       {/* admin slot manager */}
-      <div className="flex items-center justify-start gap-10">
-        <p className='text-xl font-semibold text-zinc-400 hover:text-zinc-300'>Manage Slots</p>
-        <button
-          onClick={() => AddFloor(floor?.length + 1)}
-          className='bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs rounded-md px-2 py-1 flex items-center justify-center'>Add Floor</button>
+      <div className="flex items-center justify-between gap-10">
+        <div className='flex items-center justify-between gap-10'>
+          <p className='text-xl font-semibold text-zinc-400 hover:text-zinc-300'>Manage Slots</p>
+          <button
+            onClick={() => AddFloor(floor?.length + 1)}
+            className='bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs rounded-md px-2 py-1 flex items-center justify-center'>Add Floor</button>
+        </div>
+
+        <div className='flex items-center justify-between gap-2'>
+          <i className="fa fa-inr text-zinc-500 text-sm "></i>
+          <input
+            value={price}
+            onChange={(e) => onChangePrice(e)}
+            type="text"
+            className='outline-none text-sm p-1 w-30 rounded-md'
+            placeholder='Slot Price' />
+        </div>
       </div>
 
 
@@ -251,7 +291,12 @@ const AdminHome = () => {
           <>
             <div className="flex items-center justify-end gap-3 mt-4">
               <button onClick={() => cancel()} className='text-sm bg-blue-200 px-4 py-1 text-blue-800 rounded-md hover:bg-blue-300 active:bg-blue-400'>cancel</button>
-              <button onClick={() => save()} className='text-sm bg-blue-500 px-4 py-1 text-white rounded-md hover:bg-blue-400 active:bg-blue-600'>{isSaveLoading ? 'Saving...' : 'Save'}</button>
+              <Tooltip title={`${!isPriceReady ? 'Please fill Slot Price 👆' : ''}`} arrow={false}>
+                <button
+                  disabled={!isPriceReady}
+                  onClick={() => save()} className={`text-sm  px-4 py-1 text-white rounded-md ${!isPriceReady ? 'bg-blue-200 hover:bg-blue-200 active:bg-blue-200' : 'bg-blue-500 hover:bg-blue-400 active:bg-blue-600'}`}>{isSaveLoading ? 'Saving...' : 'Save'}
+                </button>
+              </Tooltip>
             </div>
           </>
         )
@@ -262,7 +307,10 @@ const AdminHome = () => {
           <>
             <div className="flex items-center justify-end gap-3 mt-4">
               <button onClick={() => onUpdateCancel()} className='text-sm bg-blue-200 px-4 py-1 text-blue-800 rounded-md hover:bg-blue-300 active:bg-blue-400'>cancel</button>
-              <button onClick={() => update()} className='text-sm bg-blue-500 px-4 py-1 text-white rounded-md hover:bg-blue-400 active:bg-blue-600'>{isUpdateLoading ? 'Updating...' : 'Update'}</button>
+              <button
+                disabled={!isPriceReady}
+                onClick={() => update()}
+                className={`text-sm  px-4 py-1 text-white rounded-md ${!isPriceReady ? 'bg-blue-200 hover:bg-blue-200 active:bg-blue-200' : 'bg-blue-500 hover:bg-blue-400 active:bg-blue-600'}`}>{isUpdateLoading ? 'Updating...' : 'Update'}</button>
             </div>
           </>
 
