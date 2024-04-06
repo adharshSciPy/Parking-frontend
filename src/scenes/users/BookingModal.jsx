@@ -32,7 +32,6 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
   const [isWorthyToEnableFromTime, setIsWorthyToEnableFromTime] = useState(false);
 
   useEffect(() => {
-    console.log('modalDAta', modalData)
     setPrice(modalData?.price)
   }, [modalData])
 
@@ -138,7 +137,6 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
             setTime([])
           }
           else {
-            console.log('Time', time)
             let startTime = time?.[0]?.$d
             let endTime = time?.[1]?.$d
             let timeDiff = endTime.getTime() - startTime.getTime();

@@ -25,7 +25,6 @@ const AdminHome = () => {
   useEffect(() => {
     if (data?.data?.length > 0) {
       setFloor(data?.data)
-      console.log('data', data)
       setPrice(data?.data?.[0]?.price)
       setInitialPrice(data?.data?.[0]?.price)
       setCacheFloor(data?.data)

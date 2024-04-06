@@ -12,7 +12,6 @@ const Bookings = () => {
   const [bookings, setBookings] = useState([])
 
   useEffect(() => {
-    console.log('data,', data)
     setBookings(data?.data)
   }, [data])
 

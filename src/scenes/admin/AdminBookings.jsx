@@ -81,8 +81,6 @@ const AdminBookings = () => {
     }
   }, [isDelete])
 
-  console.log('bookings..', bookings)
-
   return (
     <motion.section
       initial={{ opacity: 0 }}
