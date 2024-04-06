@@ -7,7 +7,7 @@ import {
 const isParkedorNot = (givenTime, date) => {
   const [day, month, year] = date?.split("-");
   const [hours, minutes, seconds] = givenTime.split(':');
-  
+
   const givenDateTime = new Date(year, parseInt(month, 10) - 1, day, hours, minutes, seconds);
   const currentDateTime = new Date();
 
@@ -26,6 +26,7 @@ const Slot = ({ item, floorData, setIsOpen, setModalData, index }) => {
     document.body.style.overflow = "hidden";
     let data = {
       floor: floorData?.floorNumber,
+      price: floorData?.price,
       _id: floorData?._id,
       slotDetails: slot,
     };
@@ -35,9 +36,8 @@ const Slot = ({ item, floorData, setIsOpen, setModalData, index }) => {
   return (
     <div
       key={index}
-      className={`h-20 w-40 rounded-md ${
-        item?.isReserved ? "bg-red-200" : "bg-blue-200"
-      } relative`}
+      className={`h-20 w-40 rounded-md ${item?.isReserved ? "bg-red-200" : "bg-blue-200"
+        } relative`}
     >
       <div className="flex items-center justify-between px-2">
         <p className="text-xs font-bold text-zinc-500 mt-1">

@@ -5,6 +5,7 @@ import Slot from "./Slot";
 const Floor = ({ item, setIsOpen, setModalData }) => {
   let floorData = {
     floorNumber: item?.floorNumber,
+    price: item?.price,
     _id: item?._id,
   };
 

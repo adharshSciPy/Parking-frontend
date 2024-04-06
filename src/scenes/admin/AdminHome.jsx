@@ -49,8 +49,6 @@ const AdminHome = () => {
   // is update worthy
   useEffect(() => {
     if (data?.data?.length > 0 && floor?.length > 0) {
-      console.log('lamm')
-      console.log('sldfkj', price, initialPrice)
       if (data?.data !== floor || price !== initialPrice) {
         setIsUpdateBtnDisabled(true)
       }
@@ -121,11 +119,11 @@ const AdminHome = () => {
   const onChangePrice = (e) => {
     const value = e.target.value.trim();
     if (value === '' || !isNaN(parseFloat(value))) {
-        setPrice(value === '' ? '' : parseFloat(value));
+      setPrice(value === '' ? '' : parseFloat(value));
     } else {
-        toast.error('Please provide a valid number');
+      toast.error('Please provide a valid number');
     }
-}
+  }
 
   const cancel = () => {
     setFloor([])
