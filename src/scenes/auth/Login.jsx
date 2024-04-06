@@ -40,12 +40,12 @@ const Login = () => {
 
   const handleOnChange = (value, regEx, setValue, setValid, nextRef = null) => {
     setValue(value);
+    setValid(regEx.test(value));
     const debouncedFunction = debounce(() => {
-      setValid(regEx.test(value));
       if (regEx.test(value)) {
         nextRef?.current?.focus();
       }
-    }, 2000);
+    }, 4000);
     debouncedFunction();
   };
 
@@ -142,8 +142,8 @@ const Login = () => {
                 >
                   <i
                     className={`${isPasswordVisible
-                        ? "fa-regular fa-eye"
-                        : "fa-regular fa-eye-slash"
+                      ? "fa-regular fa-eye"
+                      : "fa-regular fa-eye-slash"
                       }`}
                   ></i>
                 </div>
@@ -165,8 +165,8 @@ const Login = () => {
               type="submit"
               disabled={isDisabled}
               className={`mt-4 p-2 ${isDisabled
-                  ? "bg-blue-200 hover:bg-blue-200 active:bg-blue-200"
-                  : "bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
+                ? "bg-blue-200 hover:bg-blue-200 active:bg-blue-200"
+                : "bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
                 }   rounded-md text-white text-sm w-full`}
             >
               Login
@@ -174,7 +174,7 @@ const Login = () => {
           </form>
 
           <p className="text-xs text-gray-400 font-bold">
-            {isLoading ? "Loading..." : "parking made easy!"}
+            {isLoading ? "Validating credentials" : "parking made easy!"}
           </p>
         </div>
       </div>

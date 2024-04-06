@@ -46,12 +46,12 @@ const Register = () => {
 
   const handleOnChange = (value, regEx, setValue, setValid, nextRef) => {
     setValue(value);
+    setValid(regEx.test(value))
     const debouncedFunction = debounce(() => {
-      setValid(regEx.test(value))
       if (regEx.test(value)) {
         nextRef?.current?.focus();
       }
-    }, 800);
+    }, 4000);
     debouncedFunction();
   }
 
@@ -84,6 +84,7 @@ const Register = () => {
     catch (err) {
       console.log('err', err)
       toast.error(err?.data?.message)
+      setEmail('')
     }
   }
 
@@ -130,9 +131,8 @@ const Register = () => {
             {
               !isValidEmail && <p className='text-xs text-red-600 mb-2'>Please enter valid email address</p>
             }
-            <div className={!isValidConfirmpassword ? `mb-1` : `mb-5`}>
+            <div className={!isValidPassword ? `mb-1` : `mb-5`}>
               <div className='relative'>
-
                 <Tooltip placement="right" title="Password must contain at least 8 characters, including uppercase, lowercase, and special characters">
                   <input
                     ref={passwordRef}
@@ -157,7 +157,7 @@ const Register = () => {
               </div>
             </div>
             {
-              !isValidPassword && <p className='text-xs text-red-600 mb-2'>please enter a valid password</p>
+              !isValidPassword && <p className='text-xs text-red-600 mb-1'>please enter a valid password</p>
             }
             <div className={!isValidConfirmpassword ? `mb-1` : `mb-5`}>
               <input
@@ -180,7 +180,7 @@ const Register = () => {
               className={`mt-4 p-2 ${isDisabled ? 'bg-blue-200 hover:bg-blue-200 active:bg-blue-200' : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-400'}  rounded-md text-white text-sm w-full`}>Sign Up</button>
           </form>
 
-          <p className='text-sm text-gray-400 font-thin'>parking made easy!</p>
+          <p className='text-sm text-gray-400 font-thin'>{isLoading ? 'Generating your account' : 'parking made easy!'}</p>
         </div>
       </div>
     </motion.div>
