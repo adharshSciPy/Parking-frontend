@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from "framer-motion";
 import { useGetAllBookingsQuery, useCancelBookingMutation } from '../../slices/api/bookingSlice';
+import { useGetFloorDesignQuery } from '../../slices/api/floorApiSlice';
 import { convertTimestampToTime } from '../../utils/Uihelpers';
 import { DeleteModal } from '../../components';
 import toast from 'react-hot-toast';
@@ -9,6 +10,7 @@ const AdminBookings = () => {
 
   const [page, setPage] = useState(1)
   const { data, isLoading, isSuccess, isError, refetch } = useGetAllBookingsQuery(page);
+  const { refetch: FloorRefetch } = useGetFloorDesignQuery()
   const [cancelBooking, { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess, isError: isDeleteFailed }] = useCancelBookingMutation(page);
   const [bookings, setBookings] = useState([])
 
@@ -46,6 +48,7 @@ const AdminBookings = () => {
     if (isDeleteSuccess) {
       setIsDelete(false);
       refetch();
+      FloorRefetch();
       setFloorId(null)
       setSlotId(null)
 
