@@ -45,6 +45,7 @@ const HomePage = () => {
             item={item}
             setIsOpen={setIsOpen}
             setModalData={setModalData}
+            index={index}
             key={index}
           />
         );
