@@ -35,6 +35,7 @@ const Navbar = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const notifyRef = useRef();
+  const notifyButtonRef = useRef()
 
   const { isLoggedIn, userRole } = useSelector((state) => state?.auth);
   const { notifications } = useSelector((state) => state?.notification);
@@ -81,16 +82,21 @@ const Navbar = () => {
     dispatch(setNotifications(null))
   }
 
+
+  const handleNotificationIconClick = () => {
+    setIsShow((prev) => !prev);
+  };
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (notifyRef.current && !notifyRef.current.contains(event.target)) {
-        setIsShow(false)
+      if (notifyRef.current && !notifyRef.current.contains(event.target) && !notifyButtonRef.current.contains(event.target)) {
+        setIsShow(false);
       }
     };
 
     const handleEscapeKeyPress = (event) => {
       if (event.key === 'Escape') {
-        setIsShow(false)
+        setIsShow(false);
       }
     };
 
@@ -104,6 +110,7 @@ const Navbar = () => {
       document.removeEventListener('keydown', handleEscapeKeyPress);
     };
   }, [isShow]);
+
 
 
   return (
@@ -129,16 +136,18 @@ const Navbar = () => {
       {
         isLoggedIn ?
           <div className='hidden w-1/4 md:flex justify-end gap-8'>
-            <button className='flex items-center justify-between outline-none' onClick={() => setIsShow((prev) => !prev)}>
-              <Badge count={notifications?.length} color="red" offset={[1, 3]}>
-                {
-                  isShow ?
-                    <i className="fa-solid fa-bell text-xl text-blue-900"></i>
-                    :
-                    <i class="fa-regular fa-bell text-xl text-blue-900"></i>
-                }
-              </Badge>
-            </button>
+            {(userRole !== 'admin') &&
+              <button className='flex items-center justify-between outline-none' onClick={() => handleNotificationIconClick()} ref={notifyButtonRef}>
+                <Badge count={notifications?.length} color="red" offset={[1, 3]}>
+                  {
+                    isShow ?
+                      <i className="fa-solid fa-bell text-xl text-blue-900"></i>
+                      :
+                      <i class="fa-regular fa-bell text-xl text-blue-900"></i>
+                  }
+                </Badge>
+              </button>
+            }
 
             <button type='submit' onClick={() => handleLogout()} className='bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md px-4 py-2 flex items-center justify-center'>
               Logout
@@ -188,10 +197,10 @@ const Navbar = () => {
               <i class="fa-regular fa-bell text-sm text-blue-400"></i>
               <p className='text-sm text-blue-900'>Notifications</p>
             </div>
-            <button onClick={() => handleClear()} className='border-solid border-[1px] rounded-lg px-2 border-blue-400'>
-              <div className="flex items-center justify-between gap-1">
-                <p className='text-xs text-blue-400'>clear all</p>
-                <i class="fa-solid fa-xmark text-sm text-blue-400"></i>
+            <button onClick={() => handleClear()} className='border-solid border-[1px] rounded-lg px-2 border-blue-400 text-blue-400 hover:text-white hover:bg-blue-500 active:bg-blue-400 active:text-blue-100'>
+              <div className="flex items-center justify-between gap-1 py-1 ">
+                <p className='text-xs p-0'>clear all</p>
+                <i class="fa-solid fa-xmark text-sm"></i>
               </div>
             </button>
           </div>
