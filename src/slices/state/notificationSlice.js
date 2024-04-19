@@ -15,10 +15,13 @@ const notificationSlice = createSlice({
                 state.notifications.push(notification);
             }
         },
+        clearNotifications: (state, aciton) => {
+            state.notifications = []
+        }
         
     }
 })
 
 
-export const { setNotifications } = notificationSlice.actions
+export const { setNotifications, clearNotifications } = notificationSlice.actions
 export default notificationSlice.reducer;

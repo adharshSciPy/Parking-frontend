@@ -6,7 +6,7 @@ import Navlink from './Navlink';
 import { setLogout } from '../slices/state/authSlices';
 import { useLogoutMutation } from '../slices/api/userApiSlice';
 import { Badge } from 'antd'
-import { setNotifications } from '../slices/state/notificationSlice'
+import { setNotifications, clearNotifications } from '../slices/state/notificationSlice'
 
 const userNavLinks = [
   { url: '/user/home', title: 'Home' },
@@ -79,7 +79,7 @@ const Navbar = () => {
   }
 
   const handleClear = () => {
-    dispatch(setNotifications(null))
+    dispatch(clearNotifications())
   }
 
 
