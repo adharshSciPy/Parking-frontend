@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { DatePicker, TimePicker } from "antd";
+import { DatePicker, TimePicker, Spin } from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
 import { motion } from "framer-motion";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
@@ -47,13 +48,25 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
   };
 
   // validate submit button
+  // useEffect(() => {
+  //   if (date && isWorthyToEnableFromTime) {
+  //     setIsDisabled(false);
+  //   } else {
+  //     console.log('ture')
+  //     setIsDisabled(true);
+  //   }
+  // }, [date, endTime, startTime]);
+
   useEffect(() => {
-    if (date && isWorthyToEnableFromTime) {
-      setIsDisabled(false);
-    } else {
+    if (!date || !endTime || !endTime) {
       setIsDisabled(true);
+      setDuration(0)
+      setGrandTotal(0);
     }
-  }, [date, endTime, startTime]);
+    else if (date && isWorthyToEnableFromTime) {
+      setIsDisabled(false)
+    }
+  }, [date, startTime, endTime])
 
   // booking POST api handling
   const [booking, { isLoading }] = useBookSlotMutation();
@@ -98,6 +111,9 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
   const handleClose = () => {
     document.body.style.overflow = "";
     setIsOpen(false)
+    setTime([])
+    setGrandTotal('')
+    setDuration('')
   }
 
   const handleOK = (time) => {
@@ -285,8 +301,10 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
                     ? "bg-zinc-300"
                     : "bg-blue-500 hover:bg-blue-600 active:bg-blue-400"
                     } text-white text-sm rounded-md px-4 py-2 flex items-center justify-center`}
-                >
-                  Book
+                >{
+                    isLoading ? <div className="flex align-items-center gap-3"><Spin indicator={<LoadingOutlined style={{ fontSize: 18, color: 'violet' }} spin />} /> <p>Booking...</p></div> : 'Book' 
+                  }
+
                 </button>
               </div>
             </div>
