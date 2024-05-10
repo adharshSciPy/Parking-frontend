@@ -47,16 +47,6 @@ const BookingModal = ({ isOpen, setIsOpen, modalData, refetch }) => {
     }
   };
 
-  // validate submit button
-  // useEffect(() => {
-  //   if (date && isWorthyToEnableFromTime) {
-  //     setIsDisabled(false);
-  //   } else {
-  //     console.log('ture')
-  //     setIsDisabled(true);
-  //   }
-  // }, [date, endTime, startTime]);
-
   useEffect(() => {
     if (!date || !endTime || !endTime) {
       setIsDisabled(true);

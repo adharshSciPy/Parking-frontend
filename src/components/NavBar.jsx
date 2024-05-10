@@ -209,13 +209,14 @@ const Navbar = () => {
             <ul>
               {
                 notifications?.map((item, index) => {
+                  let message = `Slot ${item?.slotNumber} in Floor No ${item?.floorNumber} schedule almost over`
                   return (
                     <li className='h-12 py-2  px-3 flex items-center justify-between border-b hover:bg-blue-50' key={index}>
                       <div className='flex items-center justify-between'>
                         <div>
                           <div class="h-7 w-7 bg-blue-500 rounded-full flex items-center justify-center text-white">{index + 1}</div>
                         </div>
-                        <p className='text-xs ml-3'>{item}</p>
+                        <p className='text-xs ml-3'>{message}</p>
                       </div>
                     </li>
                   )

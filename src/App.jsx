@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
-import { Toaster, NavBar, Notification } from './components'
+import { Toaster, NavBar, Socket } from './components'
 import Router from './router/Router';
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <Toaster />
-      <Notification />
+      <Socket />
       <NavBar />
       <Router />
     </BrowserRouter>

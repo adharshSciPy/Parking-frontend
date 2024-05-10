@@ -10,15 +10,32 @@ const notificationSlice = createSlice({
     reducers: {
         setNotifications: (state, action) => {
             const { notification } = action.payload;
-            const existingNotificationIndex = state.notifications.findIndex(n => n === notification);
-            if (existingNotificationIndex === -1) {
-                state.notifications.push(notification);
-            }
+        
+            // Clear existing notifications
+            state.notifications = [];
+        
+            // Check if notification is an array and remove duplicates
+            const uniqueNotifications = notification && Array.isArray(notification)
+                ? notification.filter((item, index, self) =>
+                    index === self.findIndex(n =>
+                        n.notification === item.notification &&
+                        n.floorNumber === item.floorNumber &&
+                        n.slotNumber === item.slotNumber
+                    )
+                )
+                : [];
+        
+            uniqueNotifications.forEach(newNotification => {
+                state.notifications.push(newNotification);
+            });
         },
+        
+
+
         clearNotifications: (state, aciton) => {
             state.notifications = []
         }
-        
+
     }
 })
 
